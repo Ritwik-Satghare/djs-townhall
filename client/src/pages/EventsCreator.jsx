@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import { ChevronDownIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -19,8 +19,11 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {useNavigate} from 'react-router-dom'
+
 
 const EventsCreator = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(new Date());
   const [data, setData] = useState({
@@ -36,6 +39,7 @@ const EventsCreator = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form Submitted:", data);
+    navigate("/form-creator", { state: { eventData: data } });
   };
 
   return (
@@ -45,7 +49,36 @@ const EventsCreator = () => {
           <CardTitle>Create a New Event</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form
+            onSubmit={handleSubmit}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault(); // ask chatGPT how it works copied from there
+                const form = e.target.form;
+
+                if (!form) return; // exit if not inside a form
+
+                const index = Array.prototype.indexOf.call(
+                  form.elements,
+                  e.target
+                );
+
+                for (let i = index + 1; i < form.elements.length; i++) {
+                  const next = form.elements[i];
+                  if (
+                    next &&
+                    typeof next.focus === "function" &&
+                    !next.disabled &&
+                    next.offsetParent !== null
+                  ) {
+                    next.focus();
+                    break;
+                  }
+                }
+              }
+            }}
+            className="space-y-4"
+          >
             {/* Event Name */}
             <div>
               <Label htmlFor="eventName">Event Name</Label>
@@ -54,7 +87,9 @@ const EventsCreator = () => {
                 type="text"
                 placeholder="Your Event's Name"
                 value={data.eventName}
-                onChange={(e) => setData({ ...data, eventName: e.target.value })}
+                onChange={(e) =>
+                  setData({ ...data, eventName: e.target.value })
+                }
               />
             </div>
 
@@ -65,13 +100,17 @@ const EventsCreator = () => {
                 id="eventDescription"
                 placeholder="Tell us about your event..."
                 value={data.eventDescription}
-                onChange={(e) => setData({ ...data, eventDescription: e.target.value })}
+                onChange={(e) =>
+                  setData({ ...data, eventDescription: e.target.value })
+                }
               />
             </div>
 
             {/* Category */}
             <div className="space-y-6">
-              <Select onValueChange={(value) => setData({ ...data, category: value })}>
+              <Select
+                onValueChange={(value) => setData({ ...data, category: value })}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Choose category" />
                 </SelectTrigger>
@@ -92,15 +131,19 @@ const EventsCreator = () => {
               <Input
                 id="picture"
                 type="file"
-                onChange={(e) => setData({ ...data, picture: e.target.files[0] })}
+                onChange={(e) =>
+                  setData({ ...data, picture: e.target.files[0] })
+                }
               />
             </div>
 
-            {/* Date Picker */}
+            {/* Date Picker (not working-> calender not opening*/} 
             <div className="flex flex-col gap-3">
-              <Label htmlFor="date" className="px-1">Date</Label>
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger>
+              <Label htmlFor="date" className="px-1">
+                Date of birth
+              </Label>
+              <Popover modal={true} open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
                   <Button
                     variant="outline"
                     id="date"
@@ -110,14 +153,16 @@ const EventsCreator = () => {
                     <ChevronDownIcon />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 overflow-hidden" align="start">
+                <PopoverContent
+                  className="w-auto p-0 overflow-hidden"
+                  align="start"
+                >
                   <Calendar
                     mode="single"
                     selected={date}
                     captionLayout="dropdown"
-                    onSelect={(selectedDate) => {
-                      setDate(selectedDate);
-                      setData({ ...data, date: selectedDate.toISOString() });
+                    onSelect={(date) => {
+                      setDate(date);
                       setOpen(false);
                     }}
                   />
@@ -139,7 +184,9 @@ const EventsCreator = () => {
 
             {/* Time */}
             <div className="flex flex-col gap-3">
-              <Label htmlFor="time-picker" className="px-1">Time</Label>
+              <Label htmlFor="time-picker" className="px-1">
+                Time
+              </Label>
               <Input
                 value={data.time}
                 type="time"

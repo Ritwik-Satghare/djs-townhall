@@ -10,6 +10,8 @@ import axios from "axios";
 import { Toaster } from "react-hot-toast";
 import ClubDashboard from "./pages/ClubDashboard";
 import EventsCreator from "./pages/EventsCreator";
+import FormCreator from "./pages/FormCreator";
+import {useFormStore} from "@/stores/FormStore"
 
 // Axios default configuration
 axios.defaults.baseURL = "http://localhost:8000/api/";
@@ -37,6 +39,7 @@ function App() {
         <Route path="/verify-email" element={<VerifyPage />} />
         <Route path="/club-dashboard" element={<ClubDashboard />} />
         <Route path="/event-creator" element={<EventsCreator />} />
+        <Route path="/form-creator" element={<FormCreator />} />
       </Routes>
     </div>
   );
