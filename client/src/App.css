@@ -1,14 +1,19 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Keep dark variant support */
 @custom-variant dark (&:is(.dark *));
-#root {
+
+/* ❌ Removed default centering and padding from #root (caused width issues) */
+/* #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-}
+} */
 
+/* ❌ Removed unused demo logo styles from Vite template */
+/*
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -21,35 +26,30 @@
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
-
 @keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
-
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
 }
-
 .card {
   padding: 2em;
 }
-
 .read-the-docs {
   color: #888;
 }
+*/
 
+/* ✅ Keep theme definitions for Shadcn + Tailwind integration */
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -83,6 +83,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* ✅ Keep root theme variables (important for Shadcn UI) */
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -118,6 +119,7 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+/* ✅ Keep dark mode theme (you’ll need it later anyway) */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -152,14 +154,18 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* ✅ Keep Tailwind base adjustments */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
-    @apply text-gray-100 bg-neutral-800;  /* dark gray that looks great with purple accents */
+    @apply text-gray-100 bg-neutral-900; /* slightly darker for your orange/black theme */
   }
 }
 
-
+/* ✅ Keep your logo font */
+.logo-font {
+  font-family: 'Righteous', sans-serif;
+}

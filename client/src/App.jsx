@@ -11,7 +11,8 @@ import { Toaster } from "react-hot-toast";
 import ClubDashboard from "./pages/ClubDashboard";
 import EventsCreator from "./pages/EventsCreator";
 import FormCreator from "./pages/FormCreator";
-import {useFormStore} from "@/stores/FormStore"
+import { useFormStore } from "@/stores/FormStore";
+import NewNavbar from "./components/newNavbar";
 
 // Axios default configuration
 axios.defaults.baseURL = "http://localhost:8000/api/";
@@ -23,23 +24,25 @@ function App() {
       <Toaster position="bottom-center" reverseOrder={false} />
 
       {/* Navbar */}
-      <Navbar />
+      <NewNavbar />
 
-      {/* Routes */}
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/register" element={<Register />} />
-
-        {/* Redirect /login to /login/student */}
-        <Route path="/login" element={<Navigate to="/login/student" replace />} />
-
-        <Route path="/login/student" element={<LoginStudent />} />
-        <Route path="/login/club" element={<LoginClub />} />
-        <Route path="/verify-email" element={<VerifyPage />} />
-        <Route path="/club-dashboard" element={<ClubDashboard />} />
-        <Route path="/event-creator" element={<EventsCreator />} />
-        <Route path="/form-creator" element={<FormCreator />} />
-      </Routes>
+      {/* Push page content below navbar */}
+      <div className="pt-20">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/login"
+            element={<Navigate to="/login/student" replace />}
+          />
+          <Route path="/login/student" element={<LoginStudent />} />
+          <Route path="/login/club" element={<LoginClub />} />
+          <Route path="/verify-email" element={<VerifyPage />} />
+          <Route path="/club-dashboard" element={<ClubDashboard />} />
+          <Route path="/event-creator" element={<EventsCreator />} />
+          <Route path="/form-creator" element={<FormCreator />} />
+        </Routes>
+      </div>
     </div>
   );
 }

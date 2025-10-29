@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@fontsource/righteous": "^5.2.7",
     "papaparse": "^5.5.3",
     "react-hot-toast": "^2.6.0"
   }
