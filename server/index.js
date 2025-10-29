@@ -24,6 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', require('./routes/authRoute'));
 app.use('/api/clubs', require('./routes/clubRoute'));
+app.use('/api/forms', require('./routes/formRoute'));
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);

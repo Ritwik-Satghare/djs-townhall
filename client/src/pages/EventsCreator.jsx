@@ -27,11 +27,11 @@ const EventsCreator = () => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(new Date());
   const [data, setData] = useState({
-    eventName: "",
-    eventDescription: "",
+    name: "",
+    description: "",
     category: "",
     venue: "",
-    date: "",
+    date: "29-10-2025",
     time: "10:30",
     mode: "Offline",
   });
@@ -81,27 +81,27 @@ const EventsCreator = () => {
           >
             {/* Event Name */}
             <div>
-              <Label htmlFor="eventName">Event Name</Label>
+              <Label htmlFor="name">Event Name</Label>
               <Input
-                id="eventName"
+                id="name"
                 type="text"
                 placeholder="Your Event's Name"
-                value={data.eventName}
+                value={data.name}
                 onChange={(e) =>
-                  setData({ ...data, eventName: e.target.value })
+                  setData({ ...data, name: e.target.value })
                 }
               />
             </div>
 
             {/* Event Description */}
             <div className="space-y-2">
-              <Label htmlFor="eventDescription">Event Description</Label>
+              <Label htmlFor="description">Event Description</Label>
               <Textarea
-                id="eventDescription"
+                id="description"
                 placeholder="Tell us about your event..."
-                value={data.eventDescription}
+                value={data.description}
                 onChange={(e) =>
-                  setData({ ...data, eventDescription: e.target.value })
+                  setData({ ...data, description: e.target.value })
                 }
               />
             </div>

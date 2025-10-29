@@ -20,7 +20,6 @@ axios.defaults.withCredentials = true;
 function App() {
   return (
     <div>
-      {/* Toaster for notifications at bottom center */}
       <Toaster position="bottom-center" reverseOrder={false} />
 
       {/* Navbar */}
