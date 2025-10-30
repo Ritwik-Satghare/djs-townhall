@@ -2,10 +2,16 @@ const { convertToDateFormat } = require("../helpers/dateFormat.js");
 const Event = require("../models/eventModel.js");
 const Form = require("../models/formModel.js");
 const mongoose = require("mongoose");
+const { eventUploadImage } = require("../helpers/imageUploader.js");
 
 const saveForm = async (req, res) => {
   try {
     let { eventData, questions } = req.body;
+    const file = req.file; // from multer
+
+    // Parse JSON strings from FormData
+    if (typeof eventData === "string") eventData = JSON.parse(eventData);
+    if (typeof questions === "string") questions = JSON.parse(questions);
 
     // Validation
     if (!eventData || !questions || questions.length === 0) {
@@ -14,8 +20,8 @@ const saveForm = async (req, res) => {
       });
     }
 
-    // convert to date and time to Date format
-    const eventDateTime = convertToDateFormat(eventData.date, eventData.time);
+    //upload image to cloudinary
+    const imageUrl = await eventUploadImage(file.path);
 
     const session = await mongoose.startSession(); // started a new session
     session.startTransaction(); // started a new transaction
@@ -42,6 +48,7 @@ const saveForm = async (req, res) => {
             venue: eventData.venue,
             dateTime: convertToDateFormat(eventData.date, eventData.time),
             mode: eventData.mode,
+            imageUrl: imageUrl,
             formId: form[0]._id, // use form ID we just got
           },
         ],

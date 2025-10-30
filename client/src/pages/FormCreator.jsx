@@ -78,10 +78,11 @@ const FormCreator = () => {
     const loadingToast = toast.loading("Saving event and form...");
 
     try {
-      const response = await axios.post("/forms/save", {
-        eventData: eventData,
-        questions: questions,
-      });
+      const formData = new FormData();
+      formData.append("image", eventData.picture);
+      formData.append("eventData", JSON.stringify(eventData));
+      formData.append("questions", JSON.stringify(questions));
+      const response = await axios.post("/forms/save", formData);
 
       toast.dismiss(loadingToast);
       toast.success("Event and Form saved successfully!", {

@@ -19,8 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {useNavigate} from 'react-router-dom'
-
+import { useNavigate } from "react-router-dom";
 
 const EventsCreator = () => {
   const navigate = useNavigate();
@@ -34,6 +33,7 @@ const EventsCreator = () => {
     date: "29-10-2025",
     time: "10:30",
     mode: "Offline",
+    picture: null,
   });
 
   const handleSubmit = async (e) => {
@@ -87,9 +87,7 @@ const EventsCreator = () => {
                 type="text"
                 placeholder="Your Event's Name"
                 value={data.name}
-                onChange={(e) =>
-                  setData({ ...data, name: e.target.value })
-                }
+                onChange={(e) => setData({ ...data, name: e.target.value })}
               />
             </div>
 
@@ -131,13 +129,22 @@ const EventsCreator = () => {
               <Input
                 id="picture"
                 type="file"
+                accept="image/*"
                 onChange={(e) =>
                   setData({ ...data, picture: e.target.files[0] })
                 }
               />
+
+              {data.picture && (
+                <img
+                  src={URL.createObjectURL(data.picture)}
+                  alt="Preview"
+                  className="object-cover w-32 h-32 mt-2 border rounded-md"
+                />
+              )}
             </div>
 
-            {/* Date Picker (not working-> calender not opening*/} 
+            {/* Date Picker */} {/*FIXME: (not working)-> calender not opening*/}
             <div className="flex flex-col gap-3">
               <Label htmlFor="date" className="px-1">
                 Date of birth
