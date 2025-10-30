@@ -88,4 +88,33 @@ const saveForm = async (req, res) => {
   }
 };
 
-module.exports = { saveForm };
+const showAllEvents = async (req, res) => {
+  try {
+    const result = await Event.find().populate("formId").sort({
+      dateTime: 1,
+    });
+    res.status(200).json(result);
+  } catch (error) {
+    console.log("Could not return events" + error);
+    res.status(500).json({ error: `Error fetching events: ${error}` });
+  }
+};
+
+const showUpcommingEvents = async (req, res) => {
+  try {
+    const result = await Event.find()
+      .populate("formId")
+      .sort({
+        dateTime: 1,
+      })
+      .limit(3);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log("Could not return events" + error);
+    res.status(500).json({ error: `Error fetching events: ${error}` });
+  }
+};
+
+
+
+module.exports = { saveForm, showAllEvents, showUpcommingEvents };

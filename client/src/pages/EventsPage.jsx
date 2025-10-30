@@ -2,54 +2,39 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Tag, Globe, Users, MapPin } from "lucide-react";
+import { Calendar, Tag, Globe } from "lucide-react";
 
-const clubs = [
-  {
-    id: 1,
-    name: "DJS Coding Club",
-    members: 120,
-    location: "Block A, Room 204",
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
-  },
-  {
-    id: 2,
-    name: "Robotics Society",
-    members: 85,
-    location: "Block B, Lab 3",
-    image: "https://images.unsplash.com/photo-1581091215367-59ab6c54b8ae",
-  },
-  {
-    id: 3,
-    name: "AI Innovators",
-    members: 95,
-    location: "Block C, Hall 2",
-    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
-  },
-];
-
-export default function HomePage() {
+export default function AllEvents() {
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await axios.get("/events/upcomming");
-        console.log("Fetched events:", res.data);
+        const res = await axios.get("/events"); // adjust URL if needed
         setEvents(res.data);
       } catch (error) {
         console.error("Error fetching events:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchEvents();
   }, []);
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-teal-400">
+        Loading events...
+      </div>
+    );
+  }
+
   return (
     <div className="w-full min-h-screen px-2 py-20 text-gray-100">
-      {/* Events Section */}
       <h1 className="mt-24 mb-12 text-4xl font-bold text-center text-teal-400 md:text-5xl">
-        Upcoming Events
+        All Events
       </h1>
 
       <div className="grid grid-cols-1 gap-8 mx-auto md:grid-cols-2 lg:grid-cols-3 max-w-7xl">
@@ -88,40 +73,6 @@ export default function HomePage() {
         ) : (
           <p className="text-center text-gray-400">No events available.</p>
         )}
-      </div>
-
-      {/* Clubs Section */}
-      <h1 className="mt-24 mb-12 text-4xl font-bold text-center text-teal-400 md:text-5xl">
-        College Clubs
-      </h1>
-
-      <div className="grid grid-cols-1 gap-8 mx-auto md:grid-cols-2 lg:grid-cols-3 max-w-7xl">
-        {clubs.map((club) => (
-          <Card
-            key={club.id}
-            className="overflow-hidden transition-all duration-300 border bg-neutral-900 border-teal-700/40 hover:border-teal-400/70"
-          >
-            <img
-              src={club.image}
-              alt={club.name}
-              className="object-cover w-full h-52"
-            />
-            <CardContent className="p-5 text-left">
-              <h2 className="mb-2 text-xl font-semibold text-teal-300">
-                {club.name}
-              </h2>
-              <p className="flex items-center gap-2 mb-2 text-sm text-gray-400">
-                <Users size={16} /> {club.members} Members
-              </p>
-              <p className="flex items-center gap-2 mb-4 text-sm text-gray-400">
-                <MapPin size={16} /> {club.location}
-              </p>
-              <Button className="w-full font-semibold text-black bg-teal-500 hover:bg-teal-400">
-                View Club
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
       </div>
     </div>
   );

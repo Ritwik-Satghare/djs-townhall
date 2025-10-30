@@ -31,7 +31,7 @@ const EventsCreator = () => {
     category: "",
     venue: "",
     date: "29-10-2025",
-    time: "10:30",
+    time: "10:30:00",
     mode: "Offline",
     picture: null,
   });

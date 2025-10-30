@@ -5,6 +5,7 @@ import Register from "./pages/Register.jsx";
 import LoginStudent from "./pages/LoginStudent.jsx";
 import LoginClub from "./pages/LoginClub.jsx";
 import VerifyPage from "./pages/VerifyPage.jsx";
+import EventsPage from "./pages/EventsPage";
 import { Routes, Route, Navigate } from "react-router-dom";
 import axios from "axios";
 import { Toaster } from "react-hot-toast";
@@ -41,6 +42,7 @@ function App() {
           <Route path="/club-dashboard" element={<ClubDashboard />} />
           <Route path="/event-creator" element={<EventsCreator />} />
           <Route path="/form-creator" element={<FormCreator />} />
+          <Route path="/events" element={<EventsPage />} />
         </Routes>
       </div>
     </div>
