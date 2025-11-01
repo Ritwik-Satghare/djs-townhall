@@ -3,34 +3,23 @@ import axios from "axios";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, Tag, Globe } from "lucide-react";
+import EventModal from "@/components/EventModal";
 
 export default function AllEvents() {
   const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await axios.get("/events"); // adjust URL if needed
+        const res = await axios.get("/events");
         setEvents(res.data);
       } catch (error) {
         console.error("Error fetching events:", error);
-      } finally {
-        setLoading(false);
       }
     };
-
     fetchEvents();
   }, []);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen text-teal-400">
-        Loading events...
-      </div>
-    );
-  }
-
   return (
     <div className="w-full min-h-screen px-2 py-20 text-gray-100">
       <h1 className="mt-24 mb-12 text-4xl font-bold text-center text-teal-400 md:text-5xl">
@@ -64,7 +53,10 @@ export default function AllEvents() {
                   <Tag size={16} /> {event.category} | <Globe size={16} />{" "}
                   {event.mode}
                 </p>
-                <Button className="w-full font-semibold text-black bg-teal-500 hover:bg-teal-400">
+                <Button
+                  onClick={() => setSelectedEvent(event)}
+                  className="w-full font-semibold text-black bg-teal-500 hover:bg-teal-400"
+                >
                   View Details
                 </Button>
               </CardContent>
@@ -74,6 +66,12 @@ export default function AllEvents() {
           <p className="text-center text-gray-400">No events available.</p>
         )}
       </div>
+      {selectedEvent && (
+        <EventModal
+          event={selectedEvent}
+          onClose={() => setSelectedEvent(null)}
+        />
+      )}
     </div>
   );
 }

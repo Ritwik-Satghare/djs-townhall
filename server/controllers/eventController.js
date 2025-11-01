@@ -90,7 +90,7 @@ const saveForm = async (req, res) => {
 
 const showAllEvents = async (req, res) => {
   try {
-    const result = await Event.find().populate("formId").sort({
+    const result = await Event.find().sort({
       dateTime: 1,
     });
     res.status(200).json(result);
@@ -103,7 +103,6 @@ const showAllEvents = async (req, res) => {
 const showUpcommingEvents = async (req, res) => {
   try {
     const result = await Event.find()
-      .populate("formId")
       .sort({
         dateTime: 1,
       })
@@ -115,6 +114,23 @@ const showUpcommingEvents = async (req, res) => {
   }
 };
 
+const showForm = async (req, res) => {
+  try {
+    const event = await Event.findById(req.params.id);
+    if (!event) return res.status(404).json({ error: "Event not found" });
 
+    const form = await Form.findOne({ eventId: req.params.id });
+    if (!form)
+      return res.status(404).json({ error: "Form not found for this event" });
 
-module.exports = { saveForm, showAllEvents, showUpcommingEvents };
+    res.status(200).json({
+      name: event.name,
+      form,
+    });
+  } catch (error) {
+    console.error("Could not return form:", error);
+    res.status(500).json({ error: "Error fetching form" });
+  }
+};
+
+module.exports = { saveForm, showAllEvents, showUpcommingEvents, showForm };

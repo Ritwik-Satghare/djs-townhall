@@ -6,6 +6,7 @@ import LoginStudent from "./pages/LoginStudent.jsx";
 import LoginClub from "./pages/LoginClub.jsx";
 import VerifyPage from "./pages/VerifyPage.jsx";
 import EventsPage from "./pages/EventsPage";
+import FillForm from "./pages/FillForm.jsx";
 import { Routes, Route, Navigate } from "react-router-dom";
 import axios from "axios";
 import { Toaster } from "react-hot-toast";
@@ -43,6 +44,7 @@ function App() {
           <Route path="/event-creator" element={<EventsCreator />} />
           <Route path="/form-creator" element={<FormCreator />} />
           <Route path="/events" element={<EventsPage />} />
+          <Route path="/events/fill-form/:eventId" element={<FillForm />} />
         </Routes>
       </div>
     </div>
