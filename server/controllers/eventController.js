@@ -3,6 +3,9 @@ const Event = require("../models/eventModel.js");
 const Form = require("../models/formModel.js");
 const mongoose = require("mongoose");
 const { eventUploadImage } = require("../helpers/imageUploader.js");
+const path = require("path");
+const fs = require("fs");
+const { createObjectCsvWriter } = require("csv-writer");
 
 const saveForm = async (req, res) => {
   try {
@@ -133,4 +136,82 @@ const showForm = async (req, res) => {
   }
 };
 
-module.exports = { saveForm, showAllEvents, showUpcommingEvents, showForm };
+const submitForm = async (req, res) => {
+  try {
+    const eventId = req.params.id;
+    const { response } = req.body;
+
+    const form = await Form.findOne({ eventId });
+    if (!form) {
+      return res.status(404).json({ error: "Form id is incorrect" });
+    }
+
+    if (!response) {
+      console.log("No response attached");
+      return res.status(400).json({ error: "No response attached" });
+    }
+
+    // Map question IDs to labels
+    const labeledResponse = {};
+    for (const [id, ans] of Object.entries(response)) {
+      const question = form.questions.find((q) => String(q.id) === String(id));
+      if (question) {
+        labeledResponse[question.label] = ans;
+      }
+    }
+
+    // Ensure data folder exists
+    const dataDir = path.join(__dirname, "..", "data");
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir);
+    }
+
+    const filePath = path.join(dataDir, `${eventId}.csv`);
+    const fileExists = fs.existsSync(filePath);
+
+    // Create headers only once — from form.questions
+    const headers = form.questions.map((q) => ({
+      id: q.label,
+      title: q.label,
+    }));
+
+    // Create CSV writer
+    const csvWriter = createObjectCsvWriter({
+      path: filePath,
+      header: headers,
+      append: fileExists, // don’t rewrite headers if file exists
+    });
+
+    // If file exists, remove header duplication
+    if (!fileExists) {
+      console.log("Creating new CSV file with headers");
+      await csvWriter.writeRecords([labeledResponse]);
+    } else {
+      console.log("Appending new response to existing CSV");
+      const csvAppendWriter = createObjectCsvWriter({
+        path: filePath,
+        header: headers,
+        append: true,
+      });
+      await csvAppendWriter.writeRecords([labeledResponse]);
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Form responses saved successfully!" });
+  } catch (error) {
+    console.error("An error occurred:", error);
+    return res
+      .status(500)
+      .json({ error: "Server error while saving responses" });
+  }
+};
+
+
+module.exports = {
+  saveForm,
+  showAllEvents,
+  showUpcommingEvents,
+  showForm,
+  submitForm,
+};

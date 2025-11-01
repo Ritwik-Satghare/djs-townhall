@@ -16,3 +16,8 @@ client/dist/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Ignore CSV form response data
+/data/
+
+/uploads/
