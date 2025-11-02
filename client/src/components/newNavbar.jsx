@@ -35,12 +35,12 @@ export default function NewNavbar() {
             </Button>
           </Link>
 
-          <Link to="/myevents">
+          <Link to="/notifications">
             <Button
               variant="ghost"
               className={`transition-colors ${buttonClass("/myevents")}`}
             >
-              My Events
+              Notifications
             </Button>
           </Link>
         </div>

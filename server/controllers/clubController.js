@@ -1,4 +1,4 @@
-const clubModel = require("../models/clubModel.js");
+const Club = require("../models/clubModel.js");
 const nodemailer = require("nodemailer");
 const transporter = require("../helpers/Mailing.js");
 const jwt = require("jsonwebtoken");
@@ -10,7 +10,7 @@ const createClub = async (req, res) => {
     const { name, email, password, description, clubId } = req.body;
 
     // to check if req has all important fields
-    if (!name || !email || !password){
+    if (!name || !email || !password) {
       console.log("Missing required fields");
       return res
         .status(400)
@@ -26,7 +26,7 @@ const createClub = async (req, res) => {
     }
 
     // check if club with the same name or email or clubId already exists
-    const existingClub = await clubModel.findOne({
+    const existingClub = await Club.findOne({
       $or: [{ name }, { email }, { clubId }],
     });
     if (existingClub) {
@@ -36,8 +36,8 @@ const createClub = async (req, res) => {
       });
     }
 
-    const newClub = new clubModel({
-      name, 
+    const newClub = new Club({
+      name,
       email,
       password: await passwordHash(password),
       description,
@@ -96,6 +96,61 @@ Thank you!
   }
 };
 
+// for event-creator page
+const verifyClub = async (req, res) => {
+  try {
+    // req.user comes from verifyToken middleware (decoded JWT)
+    const userId = req.user.id;
+    const userType = req.user.type;
+
+    // Check if user type is club
+    if (userType !== "club") {
+      return res.status(403).json({
+        authenticated: false,
+        message: "Access denied. Only clubs can create events.",
+      });
+    }
+
+    // Fetch club from database
+    const club = await Club.findById(userId);
+
+    if (!club) {
+      return res.status(404).json({
+        authenticated: false,
+        message: "Club not found",
+      });
+    }
+
+    return res.status(200).json({
+      authenticated: true,
+      message: "Club is verified",
+    });
+
+  } catch (error) {
+    console.error("Club admin verification error:", error);
+    return res.status(500).json({
+      authenticated: false,
+      message: "Server error during verification",
+    });
+  }
+};
+
+const getAllClubs = async (req, res) => {
+  try {
+    // Only return verified clubs for public display
+    const clubs = await Club.find({ isVerified: true })
+      .select('-password') // Don't send passwords to frontend
+      .sort({ createdAt: -1 }); // Newest first
+    
+    res.status(200).json(clubs);
+  } catch (error) {
+    console.error("Error fetching clubs:", error);
+    res.status(500).json({ message: "Failed to fetch clubs" });
+  }
+};
+
 module.exports = {
   createClub,
+  verifyClub,
+  getAllClubs, 
 };

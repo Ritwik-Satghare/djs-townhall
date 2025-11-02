@@ -34,12 +34,15 @@ const EventsCreator = () => {
     time: "10:30:00",
     mode: "Offline",
     picture: null,
+    message: "",
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form Submitted:", data);
-    navigate("/form-creator", { state: { eventData: data } });
+    navigate("/form-creator", {
+      state: { eventData: data, fromEventCreator: true },
+    });
   };
 
   return (
@@ -90,7 +93,6 @@ const EventsCreator = () => {
                 onChange={(e) => setData({ ...data, name: e.target.value })}
               />
             </div>
-
             {/* Event Description */}
             <div className="space-y-2">
               <Label htmlFor="description">Event Description</Label>
@@ -103,7 +105,6 @@ const EventsCreator = () => {
                 }
               />
             </div>
-
             {/* Category */}
             <div className="space-y-6">
               <Select
@@ -122,7 +123,6 @@ const EventsCreator = () => {
                 </SelectContent>
               </Select>
             </div>
-
             {/* Picture Upload */}
             <div className="grid items-center w-full max-w-sm gap-3">
               <Label htmlFor="picture">Picture</Label>
@@ -143,8 +143,8 @@ const EventsCreator = () => {
                 />
               )}
             </div>
-
-            {/* Date Picker */} {/*FIXME: (not working)-> calender not opening*/}
+            {/* Date Picker */}{" "}
+            {/*FIXME: (not working)-> calender not opening*/}
             <div className="flex flex-col gap-3">
               <Label htmlFor="date" className="px-1">
                 Date of birth
@@ -176,7 +176,6 @@ const EventsCreator = () => {
                 </PopoverContent>
               </Popover>
             </div>
-
             {/* Venue */}
             <div className="space-y-6">
               <Label htmlFor="venue">Venue</Label>
@@ -188,7 +187,6 @@ const EventsCreator = () => {
                 onChange={(e) => setData({ ...data, venue: e.target.value })}
               />
             </div>
-
             {/* Time */}
             <div className="flex flex-col gap-3">
               <Label htmlFor="time-picker" className="px-1">
@@ -203,7 +201,6 @@ const EventsCreator = () => {
                 onChange={(e) => setData({ ...data, time: e.target.value })}
               />
             </div>
-
             {/* Mode Selection */}
             <div className="space-y-2">
               <Label>Mode</Label>
@@ -232,7 +229,17 @@ const EventsCreator = () => {
                 </div>
               </RadioGroup>
             </div>
-
+            {/* Message */}
+            <div>
+              <Label htmlFor="message">Notification message</Label>
+              <Input
+                id="message"
+                type="text"
+                placeholder="Message that appears on the notification page"
+                value={data.message}
+                onChange={(e) => setData({ ...data, message: e.target.value })}
+              />
+            </div>
             {/* Submit Button */}
             <Button type="submit" className="w-full text-white">
               Create Event

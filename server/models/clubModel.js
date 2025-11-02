@@ -22,4 +22,4 @@ clubSchema.pre("save", function (next) {
 
 const Club = mongoose.model("Club", clubSchema);
 
-module.exports = Club; // ✅ CommonJS export
+module.exports = Club;

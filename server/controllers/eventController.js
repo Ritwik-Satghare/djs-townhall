@@ -1,11 +1,14 @@
 const { convertToDateFormat } = require("../helpers/dateFormat.js");
 const Event = require("../models/eventModel.js");
 const Form = require("../models/formModel.js");
+const User = require("../models/userModel.js");
+const Notification = require("../models/notificationModel.js");
 const mongoose = require("mongoose");
 const { eventUploadImage } = require("../helpers/imageUploader.js");
 const path = require("path");
 const fs = require("fs");
 const { createObjectCsvWriter } = require("csv-writer");
+const {sendNotificationToAllUsers} = require("../helpers/sendNotification.js")
 
 const saveForm = async (req, res) => {
   try {
@@ -51,6 +54,7 @@ const saveForm = async (req, res) => {
             venue: eventData.venue,
             dateTime: convertToDateFormat(eventData.date, eventData.time),
             mode: eventData.mode,
+            message: eventData.message, 
             imageUrl: imageUrl,
             formId: form[0]._id, // use form ID we just got
           },
@@ -75,6 +79,10 @@ const saveForm = async (req, res) => {
         event: event,
         form: form,
       });
+
+      // to fill the notification db
+      sendNotificationToAllUsers(event[0]);
+
     } catch (error) {
       // catching error for session
       await session.abortTransaction();

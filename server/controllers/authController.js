@@ -61,7 +61,6 @@ http://localhost:5173/verify-email?token=${emailToken}
 
 Thank you!
 `;
-        console.log("full", fullMessage);
 
         const mailOptions = {
           from: process.env.EMAIL, // sender address
@@ -117,6 +116,7 @@ const verifyEmail = async (req, res) => {
       });
     } else {
       await userModel.findByIdAndUpdate(userId, { isVerified: true });
+
       res.status(200).json({
         message: "Email verified successfully",
         type: type,
@@ -167,7 +167,7 @@ const loginUser = async (req, res) => {
     }
 
     jwt.sign(
-      { id: user._id, name: user.username, email: user.email },
+      { id: user._id, name: user.username, email: user.email, type: userType },
       process.env.JWT_SECRET,
       { expiresIn: "2h" },
       (err, token) => {

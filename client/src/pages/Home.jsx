@@ -2,34 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Tag, Globe, Users, MapPin } from "lucide-react";
-
-const clubs = [
-  {
-    id: 1,
-    name: "DJS Coding Club",
-    members: 120,
-    location: "Block A, Room 204",
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
-  },
-  {
-    id: 2,
-    name: "Robotics Society",
-    members: 85,
-    location: "Block B, Lab 3",
-    image: "https://images.unsplash.com/photo-1581091215367-59ab6c54b8ae",
-  },
-  {
-    id: 3,
-    name: "AI Innovators",
-    members: 95,
-    location: "Block C, Hall 2",
-    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
-  },
-];
+import { Calendar, Tag, Globe, Mail, Users, Building2Icon } from "lucide-react";
 
 export default function HomePage() {
   const [events, setEvents] = useState([]);
+  const [clubs, setClubs] = useState([]);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -42,7 +19,18 @@ export default function HomePage() {
       }
     };
 
+    const fetchClubs = async () => {
+      try {
+        const res = await axios.get("/clubs/all");
+        console.log("Fetched clubs:", res.data);
+        setClubs(res.data);
+      } catch (error) {
+        console.error("Error fetching clubs:", error);
+      }
+    };
+
     fetchEvents();
+    fetchClubs();
   }, []);
 
   return (
@@ -96,32 +84,41 @@ export default function HomePage() {
       </h1>
 
       <div className="grid grid-cols-1 gap-8 mx-auto md:grid-cols-2 lg:grid-cols-3 max-w-7xl">
-        {clubs.map((club) => (
-          <Card
-            key={club.id}
-            className="overflow-hidden transition-all duration-300 border bg-neutral-900 border-teal-700/40 hover:border-teal-400/70"
-          >
-            <img
-              src={club.image}
-              alt={club.name}
-              className="object-cover w-full h-52"
-            />
-            <CardContent className="p-5 text-left">
-              <h2 className="mb-2 text-xl font-semibold text-teal-300">
-                {club.name}
-              </h2>
-              <p className="flex items-center gap-2 mb-2 text-sm text-gray-400">
-                <Users size={16} /> {club.members} Members
-              </p>
-              <p className="flex items-center gap-2 mb-4 text-sm text-gray-400">
-                <MapPin size={16} /> {club.location}
-              </p>
-              <Button className="w-full font-semibold text-black bg-teal-500 hover:bg-teal-400">
-                View Club
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
+        {clubs.length > 0 ? (
+          clubs.map((club) => (
+            <Card
+              key={club._id}
+              className="overflow-hidden transition-all duration-300 border bg-neutral-900 border-teal-700/40 hover:border-teal-400/70"
+            >
+              <div className="flex items-center justify-center w-full bg-gray-800 h-52">
+                <Users size={80} className="text-teal-400/40" />
+              </div>
+              <CardContent className="p-5 text-left">
+                <h2 className="mb-2 text-xl font-semibold text-teal-300">
+                  {club.name}
+                </h2>
+                {club.description && (
+                  <p className="mb-3 text-sm text-gray-400 line-clamp-2">
+                    {club.description}
+                  </p>
+                )}
+                <p className="flex items-center gap-2 mb-2 text-sm text-gray-400">
+                  <Mail size={16} /> {club.email}
+                </p>
+                <p className="flex items-center gap-2 mb-4 text-sm text-gray-400">
+                  <Tag size={16} /> ID: {club.clubId}
+                </p>
+                <Button className="w-full font-semibold text-black bg-teal-500 hover:bg-teal-400">
+                  View Club
+                </Button>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <p className="text-center text-gray-400 col-span-full">
+            No clubs available.
+          </p>
+        )}
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ const eventSchema = new mongoose.Schema(
     venue: { type: String, required: true },
     dateTime: { type: Date, required: true }, 
     mode: { type: String, required: true },
+    message: {type:String}, 
     imageUrl: {type: String},
     formId: {
       type: mongoose.Schema.Types.ObjectId,

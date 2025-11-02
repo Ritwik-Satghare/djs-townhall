@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useFormStore } from "@/stores/FormStore";
 import { Trash2, Plus, Save } from "lucide-react";
@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 
 const FormCreator = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const questions = useFormStore((state) => state.questions);
   const addQuestion = useFormStore((state) => state.addQuestion);
@@ -92,9 +93,10 @@ const FormCreator = () => {
       console.log("questions:", questions);
       console.log("Saved Event:", response.data.event);
       console.log("Saved Form:", response.data.form);
+      navigate("/");
     } catch (error) {
       toast.dismiss(loadingToast);
-      
+
       if (error.response) {
         toast.error(error.response.data.error || "Failed to save!", {
           duration: 4000,

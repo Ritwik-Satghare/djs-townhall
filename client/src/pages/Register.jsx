@@ -51,55 +51,86 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label>Name: </label>
-        <input
-          type="text"
-          placeholder="enter name..."
-          value={data.name}
-          onChange={(e) => {
-            setData({ ...data, name: e.target.value });
-          }}
-        />
-        <label>SAPId: </label>
-        <input
-          type="number"
-          placeholder="enter SAPId..."
-          value={data.sapid}
-          onChange={(e) => {
-            setData({ ...data, sapid: e.target.value });
-          }}
-        />
-        <label>Phone: </label>
-        <input
-          type="tel"
-          placeholder="enter phone..."
-          value={data.phone}
-          onChange={(e) => {
-            setData({ ...data, phone: e.target.value });
-          }}
-        />
-        <label>Email: </label>
-        <input
-          type="email"
-          placeholder="enter email..."
-          value={data.email}
-          onChange={(e) => {
-            setData({ ...data, email: e.target.value });
-          }}
-        />
-        <label>Password: </label>
-        <input
-          type="password"
-          placeholder="enter password..."
-          value={data.password}
-          onChange={(e) => {
-            setData({ ...data, password: e.target.value });
-          }}
-        />
-        <button type="submit">Register</button>
-      </form>
+    <div className="flex flex-col items-center justify-center min-h-screen px-4 bg-[#0d0d0d] text-gray-200">
+      {/* Form box */}
+      <div className="w-full max-w-sm p-6 bg-[#1b1b1b] border border-gray-700 rounded-lg shadow-md">
+        <h2 className="mb-4 text-lg font-semibold text-center text-gray-100">
+          Register
+        </h2>
+        <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm text-gray-400">Name</label>
+            <input
+              type="text"
+              placeholder="Enter name..."
+              value={data.name}
+              onChange={(e) => {
+                setData({ ...data, name: e.target.value });
+              }}
+              className="px-3 py-2 text-sm text-gray-200 bg-[#2a2a2a] border border-gray-700 rounded-md focus:outline-none focus:ring-1 focus:ring-cyan-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm text-gray-400">SAPId</label>
+            <input
+              type="number"
+              placeholder="Enter SAPId..."
+              value={data.sapid}
+              onChange={(e) => {
+                setData({ ...data, sapid: e.target.value });
+              }}
+              className="px-3 py-2 text-sm text-gray-200 bg-[#2a2a2a] border border-gray-700 rounded-md focus:outline-none focus:ring-1 focus:ring-cyan-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm text-gray-400">Phone</label>
+            <input
+              type="tel"
+              placeholder="Enter phone..."
+              value={data.phone}
+              onChange={(e) => {
+                setData({ ...data, phone: e.target.value });
+              }}
+              className="px-3 py-2 text-sm text-gray-200 bg-[#2a2a2a] border border-gray-700 rounded-md focus:outline-none focus:ring-1 focus:ring-cyan-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm text-gray-400">Email</label>
+            <input
+              type="email"
+              placeholder="Enter email..."
+              value={data.email}
+              onChange={(e) => {
+                setData({ ...data, email: e.target.value });
+              }}
+              className="px-3 py-2 text-sm text-gray-200 bg-[#2a2a2a] border border-gray-700 rounded-md focus:ring-cyan-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm text-gray-400">Password</label>
+            <input
+              type="password"
+              placeholder="Enter password..."
+              value={data.password}
+              onChange={(e) => {
+                setData({ ...data, password: e.target.value });
+              }}
+              className="px-3 py-2 text-sm text-gray-200 bg-[#2a2a2a] border border-gray-700 rounded-md focus:outline-none focus:ring-1 focus:ring-cyan-500"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full px-3 py-2 mt-2 text-sm font-medium text-white transition-colors rounded-md bg-cyan-500 hover:bg-cyan-600"
+          >
+            Register
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

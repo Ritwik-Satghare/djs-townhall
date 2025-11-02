@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
@@ -41,7 +40,6 @@ const FillForm = () => {
         const defaultValues = {};
 
         fetchedData.form.questions.forEach((q) => {
-          // Use q.id instead of q.label for uniqueness
           const fieldName = String(q.id);
 
           if (q.type === "short_text") {
@@ -74,15 +72,17 @@ const FillForm = () => {
     const loadingToast = toast.loading("Saving Registration...");
 
     try {
-      const res = await axios.post(`/events/forms/${eventId}/submit`, {
-        response: data,
-      });
+      // Send cookie automatically 
+      const res = await axios.post(
+        `/events/forms/${eventId}/submit`,
+        { response: data },
+        { withCredentials: true } // <-- include cookie in request
+      );
+
       toast.dismiss(loadingToast);
-      toast.success("Form submitted successfully!", {
-        duration: 4000,
-      });
+      toast.success("Form submitted successfully!", { duration: 4000 });
       form.reset();
-      navigate("/myevents");
+      navigate("/events");
     } catch (error) {
       toast.dismiss(loadingToast);
       if (error.response) {
@@ -116,13 +116,13 @@ const FillForm = () => {
         <h1 className="mb-2 text-3xl font-semibold text-center">
           Registration Form
         </h1>
-        <p className="text-center tetext-center">for {formData.name}</p>
+        <p className="text-center">for {formData.name}</p>
       </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {formData.form.questions.map((question, index) => {
-            const fieldName = String(question.id); // unique field name
+          {formData.form.questions.map((question) => {
+            const fieldName = String(question.id);
 
             return (
               <FormField
@@ -155,7 +155,7 @@ const FillForm = () => {
                               >
                                 <RadioGroupItem
                                   id={optionId}
-                                  name={fieldName} // ensures separation
+                                  name={fieldName}
                                   value={option}
                                 />
                                 <FormLabel
